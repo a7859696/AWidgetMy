@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">快捷开关</string>
+    <string name="hello_world">你好世界!</string>
+    <string name="action_settings">设置</string>
+    <string name="title_activity_app_select">快捷开关</string>
+    <string name="app_select_text">点击图标添加到桌面</string>
+    <string name="widget_text">快捷开关</string>
+    <string name="widget_edit">编辑</string>
+    <string name="widget_Canceledit">取消</string>
+    
+    <string name="brightness">亮度</string>
+    
+    <string name="toastnone">设备状态良好,不需要清理内存</string>
+    <string name="toasttext">结束了%1$d个任务，释放内存：%2$dM</string>
+    
+    <string name="bright_button">明亮</string>
+    <string name="mid_bright_button">中等</string>
+    <string name="night_bright_button">暗淡</string>
+    <string name="bright_on_button">高亮</string>
+    
+    <string name="wifi_button">Wifi</string>
+    <string name="mobiledata_button">数据</string>
+    <string name="auto_bright_button">关屏</string>
+    <string name="ap_button">热点</string>
+    <string name="reset_button">复位</string>
+    <string name="quick_button">加速</string>
+    <string name="settings_button">系统设置</string>
+    <string name="carsetting_button">车机设置</string>
+    <string name="airplane_mode_button">飞行模式</string>
+    
+    <string name="reset_title">请确定是否系统复位？</string>
+    <string name="okLabel">确定</string>
+    <string name="cancelLabel">取消</string>
+
+</resources>

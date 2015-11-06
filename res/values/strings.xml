@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SwitchWidget</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_app_select">ShortcutAppWidget</string>
+    <string name="app_select_text">add to desktop by clicking icon</string>
+    <string name="widget_text">Optional</string>
+    <string name="widget_edit">Edit</string>
+    <string name="widget_Canceledit">Cancel</string>
+    
+    <string name="brightness">Brightness</string>
+    
+    
+    <string name="toastnone">The equipment is in good condition.</string>
+    <string name="toasttext">Successfully freed %2$dM memory</string>
+    
+    <string name="bright_button">Bright</string>
+    <string name="bright_on_button">Highlight</string>
+    <string name="mid_bright_button">Midlight</string>
+    <string name="night_bright_button">Dark</string>
+    
+    <string name="wifi_button">WIFI</string>
+    <string name="mobiledata_button">Mobiledata</string>
+    <string name="auto_bright_button">Off screen</string>
+    <string name="ap_button">Hotspot</string>
+    <string name="reset_button">Reset</string>
+    <string name="quick_button">Accelerate</string>
+    <string name="settings_button">Settings</string>
+    <string name="carsetting_button">SetUp</string>
+    <string name="airplane_mode_button">Airplane</string>
+    <string name="reset_title">Restart device now ?</string>
+    <string name="okLabel">OK</string>
+    <string name="cancelLabel">Cancel</string>
+
+</resources>
