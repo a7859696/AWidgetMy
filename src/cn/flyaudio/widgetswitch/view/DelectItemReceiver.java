@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -33,10 +34,11 @@ public class DelectItemReceiver extends BroadcastReceiver {
 	private WifiButton wifiButton;
 	private FlyModel flymode;
 	private MobileDataButton wifidata;
+	private Boolean datastate;
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-		if (intent.getAction().equals("cn.flyaudio.shortcut.delectitem")) {
+		if (intent.getAction().equals("cn.flyaudio.switchwidgetcut.delectitem")) {
 			Flog.d(Constants.TAG, "[DelectItemReceiver onReceive]");
 			int indexViewId = intent.getExtras().getInt(KEY_VIEW_ID, 0);
 			int appWidgetId = intent.getExtras().getInt(KEY_APPWIDGET_ID, 0);
@@ -57,7 +59,7 @@ public class DelectItemReceiver extends BroadcastReceiver {
 
 		}
 
-		if (intent.getAction().equals("cn.flyaudio.shortcut.edititem")) {
+		if (intent.getAction().equals("cn.flyaudio.switchwidgetcut.edititem")) {
 			boolean isEdit = intent.getBooleanExtra("isEdit", false);
 			Flog.d(Constants.TAG, "DelectItemReceiver onReceive---isEdit="
 					+ isEdit);
@@ -153,17 +155,18 @@ public class DelectItemReceiver extends BroadcastReceiver {
 		// 数据 点击之后的开关....
 		if (intent.getAction().equals("cn.flyaudio.shortcut.data.picture")) {
 			//Flog.d("lixuandata", "Action=" + intent.getAction());
-
+			Log.d("lixuandata", "Action====get"+intent.getAction());
 			 wifidata = new MobileDataButton(context);
-			wifidata.toggleState(context);
+			 wifidata.toggleState(context);
 		}// 数据接受开和关的改变.
 		if (intent.getAction().equals(
 				"com.android.flyaudio.powerwidget.mobiledatabutton")) {
 		//	Flog.d("lixuandata", "Action=" + intent.getAction());
+			Log.d("lixuandata", "Action=====WifiChange"+intent.getAction());
 			AppWidgetDao dao = new AppWidgetDao(context);
 			List<Picture> three = dao.queryPkgName();
 			Iterator<Picture> it = three.iterator();
-
+			wifidata = new MobileDataButton(context);
 			while (it.hasNext()) {
 				Picture threes = (Picture) it.next();
 				int name = threes.getPkgNames();
@@ -173,8 +176,8 @@ public class DelectItemReceiver extends BroadcastReceiver {
 
 					RemoteViews remoteViews = SwitchWidget.initRemoteViews(
 							context, appWidgetId);
-					wifidata = new MobileDataButton(context);
-					Boolean datastate = wifidata.getActualStatemy(context);
+					
+					 datastate = wifidata.getActualStatemy(context);
 					if (!datastate) {
 						remoteViews.setInt(iconIds[index],
 								"setBackgroundColor", Color.WHITE);

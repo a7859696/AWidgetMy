@@ -7,6 +7,7 @@
         android:id="@+id/widget_background"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:src="@drawable/widget_layout_bg"
         android:scaleType="fitXY" />
      
      <RelativeLayout
@@ -81,6 +82,8 @@
                 android:layout_below="@+id/widget_first_icon"
                 android:layout_marginTop="15px"
                 android:layout_centerHorizontal="true"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="@android:color/white" />  
             <ImageView
                 android:id="@+id/widget_first_delect"
@@ -122,6 +125,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/widget_second_icon"
                 android:layout_marginTop="15px"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:layout_centerHorizontal="true"
                 android:textColor="@android:color/white" />
             <ImageView
@@ -165,6 +170,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/widget_three_icon"
                 android:layout_marginTop="15px"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:layout_centerHorizontal="true"
                 android:textColor="@android:color/white" />
              <ImageView
@@ -209,6 +216,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/widget_four_icon"
                 android:layout_marginTop="15px"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:layout_centerHorizontal="true"
                 android:textColor="@android:color/white" />
             <ImageView

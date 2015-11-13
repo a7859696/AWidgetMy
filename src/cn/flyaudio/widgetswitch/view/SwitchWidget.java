@@ -53,6 +53,7 @@ public class SwitchWidget extends AppWidgetProvider {
 			"cn.flyaudio.shortcut.car.picture",
 			"cn.flyaudio.shortcut.screen.picture" };
 
+
 	@Override
 	// 周期更新时调用
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -79,6 +80,13 @@ public class SwitchWidget extends AppWidgetProvider {
 			appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 		}
 
+	}
+
+	@Override
+	public void onEnabled(Context context) {
+		// TODO Auto-generated method stub
+		super.onEnabled(context);
+		context.startService(new Intent(context, AppWidgetService.class));
 	}
 
 	/**
@@ -128,7 +136,7 @@ public class SwitchWidget extends AppWidgetProvider {
 		 * remoteViews.setOnClickPendingIntent(Constants.titles[0], textIntent);
 		 */
 
-		Intent intent_edit = new Intent("cn.flyaudio.shortcut.edititem"); // 发送
+		Intent intent_edit = new Intent("cn.flyaudio.switchwidgetcut.edititem"); // 发送
 																			// 点击编辑的Intent,,,,
 		intent_edit.putExtra("titlesId", 1);
 		intent_edit.putExtra("isEdit", true);
@@ -194,8 +202,13 @@ public class SwitchWidget extends AppWidgetProvider {
 							view.setOnClickPendingIntent(
 									Constants.shortcutIds[i], pendingIntent_d);
 						} else {
+						
+						//  启动cheji的Intent,
 							Intent intent = new Intent().setClass(context,
 									AppWidgetService.class);
+							intent.putExtra(Constants.KEY_VIEW_ID, i);
+							intent.putExtra(Constants.KEY_APPWIDGET_ID,
+									appWidgetId);
 							intent.putExtra(Constants.KEY_FLYAPP, 120);
 							PendingIntent pendingIntent = PendingIntent
 									.getService(context, (appWidgetId
@@ -203,6 +216,7 @@ public class SwitchWidget extends AppWidgetProvider {
 											PendingIntent.FLAG_UPDATE_CURRENT);
 							view.setOnClickPendingIntent(shortcutIds[i],
 									pendingIntent);
+
 						}
 
 						if (isEdit) // 是否可编辑
@@ -249,7 +263,7 @@ public class SwitchWidget extends AppWidgetProvider {
 	private static void editModel(Context context, int appWidgetId,
 			RemoteViews view, int i) {
 		view.setViewVisibility(delectIds[i], View.VISIBLE);
-		Intent intent_d = new Intent("cn.flyaudio.shortcut.delectitem");
+		Intent intent_d = new Intent("cn.flyaudio.switchwidgetcut.delectitem");
 		intent_d.putExtra(Constants.KEY_VIEW_ID, i);
 		intent_d.putExtra(Constants.KEY_APPWIDGET_ID, appWidgetId);
 		PendingIntent pendingIntent_d = PendingIntent.getBroadcast(context,
@@ -270,7 +284,7 @@ public class SwitchWidget extends AppWidgetProvider {
 		Flog.d(TAG, "editModel----------:appWidgetId=" + appWidgetId);
 
 		for (int index = 0; index < Constants.viewIds.length; index++) {
-			Intent intent_edit = new Intent("cn.flyaudio.shortcut.edititem");
+			Intent intent_edit = new Intent("cn.flyaudio.switchwidgetcut.edititem");
 
 			intent_edit.putExtra("titlesId", 1);
 			intent_edit.putExtra("isEdit", false);
@@ -303,6 +317,7 @@ public class SwitchWidget extends AppWidgetProvider {
 	public void onDisabled(Context context) {
 		// TODO Auto-generated method stub
 		super.onDisabled(context);
+		context.stopService(new Intent(context, AppWidgetService.class));
 	}
 
 	@Override

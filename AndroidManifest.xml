@@ -115,8 +115,8 @@
         <receiver 
             android:name="cn.flyaudio.widgetswitch.view.DelectItemReceiver">
              <intent-filter>
-                <action android:name="cn.flyaudio.shortcut.delectitem" />
-                <action android:name="cn.flyaudio.shortcut.edititem" />
+                <action android:name="cn.flyaudio.switchwidgetcut.delectitem" />
+                <action android:name="cn.flyaudio.switchwidgetcut.edititem" />
                 <action android:name="cn.flyaudio.shortcut.wifi.picture"/>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
                 <action android:name="android.net.wifi.WIFI_AP_STATE_CHANGED"/>

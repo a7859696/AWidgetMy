@@ -6,6 +6,7 @@ import cn.flyaudio.widgetswitch.alltools.SkinResource;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class AppInfoAdapter extends BaseAdapter {
 
 	public AppInfoAdapter(Context context, List<Picture> picturess, int[] imgs) {
 		super();
+Log.d("pictures", "AppInfoAdapter");
 		infater = infater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		pictures = picturess;

@@ -1,5 +1,8 @@
 package cn.flyaudio.widgetswitch.alltools;
 
+import cn.flyaudio.widgetswitch.view.SwitchWidget;
+import cn.flyaudio.widgetswitch.view.SysandchejiBroadcast;
+
 import com.flyaudio.proxyservice.aidl.IProxyConnet;
 
 import android.app.Service;
@@ -56,10 +59,16 @@ public class AppWidgetService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
+
 		try {
+			int indexViewId = intent.getExtras().getInt(KEY_VIEW_ID, 0);
+			int appWidgetId = intent.getExtras().getInt(KEY_APPWIDGET_ID, 0);
+			
 			int key = intent.getIntExtra(KEY_FLYAPP, -1);
 			Log.d(TAG, "[AppWidgetService onStartCommand] intent:" + key);
 			if (key != -1 && mIProxyConnet != null) {
+				SysandchejiBroadcast a1=new SysandchejiBroadcast();
+				  a1. changgepicture(this, indexViewId, appWidgetId,500);
 				Log.d(TAG,
 						"[AppWidgetService onStartCommand] iffifififififififif:");
 				mIProxyConnet.sendFlyAppManger(key, FlyConstant.ON);

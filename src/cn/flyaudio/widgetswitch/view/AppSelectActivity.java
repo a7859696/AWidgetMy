@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -27,6 +28,8 @@ import android.widget.TextView;
 
 
 
+import cn.flyaudio.widgetswitch.alltools.AppWidgetService;
+import cn.flyaudio.widgetswitch.alltools.Constants;
 import cn.flyaudio.widgetswitch.alltools.DrawableTools;
 import cn.flyaudio.widgetswitch.alltools.Flog;
 import cn.flyaudio.widgetswitch.alltools.SetConmmonView;
@@ -300,9 +303,10 @@ public class AppSelectActivity extends Activity {
 		for (int i = 0; i < imgs.length; i++) {
 			Picture picture = new Picture(titless2[i], imgs[i]);
 			pictures.add(picture);
+			Log.d("pictures1", "titless2[i], imgs[i]"+titless2[i]+imgs[i]);
 		}
 		//GridView gridView = (GridView) view.findViewById(R.id.grid);
-		GridView gridView = (GridView) view.findViewById(SkinResource.getSkinResourceId("grid", "id"));
+		GridView gridView = (GridView) view.findViewById(SkinResource.getSkinResourceId("shortcut_grid", "id"));
 		AppInfoAdapter adapter;
 
 		adapter = new AppInfoAdapter(this, pictures, imgs);

@@ -66,7 +66,10 @@ public class MobileDataButton extends ButtonPower {
 		mTelephonyManager = TelephonyManager.from(mContext);
 
 		mMobileDataEnabled = getDataState(mContext); // 换取初始系统状态
-		Log.d("lixuandata", " MobileDataButton() mMobileDataEnabled : "
+		
+		
+		//开启线程．．点击速度快了会让系统卡死？？？？？？　　　修改原版，不要线程了．！
+/*		Log.d("lixuandata", " MobileDataButton() mMobileDataEnabled : "
 				+ mMobileDataEnabled);
 		// 开启线程读取状态
 		if (isFirst) {
@@ -74,7 +77,7 @@ public class MobileDataButton extends ButtonPower {
 			Thread thread = new Thread(new MobileStateRunnable());
 			thread.start();
 			isFirst = false;
-		}
+		}*/
 	}
 
 	public void toggleState(Context context) {
@@ -89,11 +92,11 @@ public class MobileDataButton extends ButtonPower {
 		boolean enabled = getDataState(context);
 
 		if (enabled) {
-			mTelephonyManager.setDataEnabled(false);
-			// cm.setMobileDataEnabled(false);
+			mTelephonyManager.setDataEnabled(false);	
+			context.sendBroadcast(new Intent(MOBILEACTION));
 		} else {
-			mTelephonyManager.setDataEnabled(true);
-			// cm.setMobileDataEnabled(true);
+			mTelephonyManager.setDataEnabled(true);			
+			context.sendBroadcast(new Intent(MOBILEACTION));
 		}
 	}
 
@@ -132,8 +135,7 @@ public class MobileDataButton extends ButtonPower {
 					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					Log.d("MobileStateRunnable",
-							"InterruptedException : " + e.getMessage());
+					Log.d("MobileContentObserver", "InterruptedException : " + e.getMessage());
 				}
 			}
 		}
