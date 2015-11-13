@@ -96,7 +96,8 @@ public class BrightnessButton extends ButtonPower {
 					i.putExtra("value", 2);
 					Log.d("DDD", "MID_BACKLIGHT.....");
 				} else if (brightness == LOW_BACKLIGHT) {
-					i.putExtra("value", 1);
+					i.putExtra("value", 2);
+					brightness++;
 					Log.d("DDD", "LOW_BACKLIGHT.....");
 				}
 			}
