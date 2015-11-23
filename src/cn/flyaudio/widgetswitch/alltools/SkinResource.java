@@ -29,9 +29,9 @@ public class SkinResource {
 		try {
 			mLocalContext = context;
 			mSkinContext = context.createPackageContext(pkgName, Context.CONTEXT_IGNORE_SECURITY);
-			Log.d(TAG, "The skin resource packageName:" + pkgName);
+			Log.d("pictures", "The skin resource packageName:" + pkgName);
 		} catch (NameNotFoundException e) {
-			Log.e(TAG, "Can't find the skin resource packageName:" + pkgName);
+			Log.e("pictures", "Can't find the skin resource packageName:" + pkgName);
 			e.printStackTrace();
 			mSkinContext = context;
 		}

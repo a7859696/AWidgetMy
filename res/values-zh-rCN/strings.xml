@@ -20,7 +20,7 @@
     <string name="night_bright_button">暗淡</string>
     <string name="bright_on_button">高亮</string>
     
-    <string name="wifi_button">Wifi</string>
+    <string name="wifi_button">WIFI</string>
     <string name="mobiledata_button">数据</string>
     <string name="auto_bright_button">关屏</string>
     <string name="ap_button">热点</string>

@@ -51,6 +51,7 @@ public class DelectItemReceiver extends BroadcastReceiver {
 			// update remoteViews
 			AppWidgetManager appWidgetManager = AppWidgetManager
 					.getInstance(context);
+			
 			appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
 			new AppWidgetDao(context).delete(indexViewId, appWidgetId).close();
@@ -77,79 +78,12 @@ public class DelectItemReceiver extends BroadcastReceiver {
 			wifiButton = new WifiButton();
 			wifiButton.toggleState(context);
 		}
-		// wifi 状态改变的广播，使图片改变
-		if (intent.getAction().equals("android.net.wifi.WIFI_STATE_CHANGED")) {
-			// Flog.d("lixuanwifi", "Action=" + intent.getAction());
-			AppWidgetDao dao = new AppWidgetDao(context);
-			List<Picture> three = dao.queryPkgName();
-			Iterator<Picture> it = three.iterator();
-			wifiButton = new WifiButton();
-
-			while (it.hasNext()) {
-				Picture threes = (Picture) it.next();
-				int name = threes.getPkgNames();
-				int index = threes.getIndexViewId();
-				int appWidgetId = threes.getAppWidgetId();
-
-				if (name == AppSelectActivity.titless2[5]) {
-
-					RemoteViews remoteViews = SwitchWidget.initRemoteViews(
-							context, appWidgetId);
-					int x = wifiButton.getActualStatemy(context);
-					if ((2 == x) || (4 == x) || (6 == x)) {
-						remoteViews.setInt(iconIds[index],
-								"setBackgroundColor", Color.WHITE);
-					} else {
-						remoteViews.setInt(iconIds[index],
-								"setBackgroundColor",
-								DrawableTools.getCurColorTheme());
-					}
-
-					setCommonView1(remoteViews, index, 5);
-					AppWidgetManager appWidgetManager = AppWidgetManager
-							.getInstance(context);
-					appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-				}
-			}
-		}
 
 		// 点击之后改变wifiAP状态
 		if (intent.getAction().equals("cn.flyaudio.shortcut.wifiAP.picture")) {
 			//Flog.d("lixuanwifiAP", "Action=" + intent.getAction());
 			wifiapButton = new WifiApButton();
 			wifiapButton.toggleState(context);
-		}
-		if (intent.getAction().equals("android.net.wifi.WIFI_AP_STATE_CHANGED")) {
-		//	Flog.d("lixuanwifiAP", "Action=" + intent.getAction());
-			AppWidgetDao dao = new AppWidgetDao(context);
-			List<Picture> three = dao.queryPkgName();
-			wifiapButton = new WifiApButton();
-			Iterator<Picture> it = three.iterator();
-
-			while (it.hasNext()) {
-				Picture threes = (Picture) it.next();
-				int name = threes.getPkgNames();
-				int index = threes.getIndexViewId();
-				int appWidgetId = threes.getAppWidgetId();
-
-				if (name == AppSelectActivity.titless2[1]) {
-					RemoteViews remoteViews = SwitchWidget.initRemoteViews(
-							context, appWidgetId);
-					int x = wifiapButton.getActualStatemy(context);
-					if ((2 == x) || (4 == x) || (6 == x)) {
-						remoteViews.setInt(iconIds[index],
-								"setBackgroundColor", Color.WHITE);
-					} else {
-						remoteViews.setInt(iconIds[index],
-								"setBackgroundColor",
-								DrawableTools.getCurColorTheme());
-					}
-					setCommonView1(remoteViews, index, 1);
-					AppWidgetManager appWidgetManager = AppWidgetManager
-							.getInstance(context);
-					appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-				}
-			}
 		}
 
 		// 数据 点击之后的开关....
@@ -158,40 +92,6 @@ public class DelectItemReceiver extends BroadcastReceiver {
 			Log.d("lixuandata", "Action====get"+intent.getAction());
 			 wifidata = new MobileDataButton(context);
 			 wifidata.toggleState(context);
-		}// 数据接受开和关的改变.
-		if (intent.getAction().equals(
-				"com.android.flyaudio.powerwidget.mobiledatabutton")) {
-		//	Flog.d("lixuandata", "Action=" + intent.getAction());
-			Log.d("lixuandata", "Action=====WifiChange"+intent.getAction());
-			AppWidgetDao dao = new AppWidgetDao(context);
-			List<Picture> three = dao.queryPkgName();
-			Iterator<Picture> it = three.iterator();
-			wifidata = new MobileDataButton(context);
-			while (it.hasNext()) {
-				Picture threes = (Picture) it.next();
-				int name = threes.getPkgNames();
-				int index = threes.getIndexViewId();
-				int appWidgetId = threes.getAppWidgetId();
-				if (name == AppSelectActivity.titless2[4]) {
-
-					RemoteViews remoteViews = SwitchWidget.initRemoteViews(
-							context, appWidgetId);
-					
-					 datastate = wifidata.getActualStatemy(context);
-					if (!datastate) {
-						remoteViews.setInt(iconIds[index],
-								"setBackgroundColor", Color.WHITE);
-					} else {
-						remoteViews.setInt(iconIds[index],
-								"setBackgroundColor",
-								DrawableTools.getCurColorTheme());
-					}
-					setCommonView1(remoteViews, index, 4);
-					AppWidgetManager appWidgetManager = AppWidgetManager
-							.getInstance(context);
-					appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-				}
-			}
 		}
 
 		// 飞行模式 2个广播
@@ -201,47 +101,10 @@ public class DelectItemReceiver extends BroadcastReceiver {
 			flymode = new FlyModel();
 			flymode.toggleState(context);
 		}
-		if (intent.getAction().equals("android.intent.action.AIRPLANE_MODE")) {
-			//Flog.d("lixuanflystate", "Action=" + intent.getAction());
-			AppWidgetDao dao = new AppWidgetDao(context);
-			List<Picture> three = dao.queryPkgName();
-			flymode = new FlyModel();
-			Iterator<Picture> it = three.iterator();
+	}
+	// onRecieve结束
 
-			while (it.hasNext()) {
-
-				Picture threes = (Picture) it.next();
-				int name = threes.getPkgNames();
-				int index = threes.getIndexViewId();
-				int appWidgetId = threes.getAppWidgetId();
-
-				if (name == AppSelectActivity.titless2[6]) {
-
-					RemoteViews remoteViews = SwitchWidget.initRemoteViews(
-							context, appWidgetId);
-
-					Boolean flystate = flymode.getActualState(context);
-
-					if (!flystate) {
-
-						remoteViews.setInt(iconIds[index],
-								"setBackgroundColor", Color.WHITE);
-					} else {
-						//Flog.d("lixuanflystate", "设置图片的背景色 系统色" + flystate);
-						remoteViews.setInt(iconIds[index],
-								"setBackgroundColor",
-								DrawableTools.getCurColorTheme());
-					}
-					setCommonView1(remoteViews, index, 6);
-					AppWidgetManager appWidgetManager = AppWidgetManager
-							.getInstance(context);
-					appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-				}
-			}
-		}
-
-	}// onRecieve结束
-
+	
 	private void setCommonView(RemoteViews remoteViews, int indexViewId) {
 		remoteViews.setViewVisibility(shortcutIds[indexViewId], View.GONE);
 		remoteViews.setViewVisibility(viewIds[indexViewId], View.VISIBLE);

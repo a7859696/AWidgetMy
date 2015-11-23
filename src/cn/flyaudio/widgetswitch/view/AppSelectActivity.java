@@ -140,20 +140,25 @@ public class AppSelectActivity extends Activity {
 				}
 				break;
 			case 0:
-				if ((1 == brightnessButton
-						.getActualState(AppSelectActivity.this) || (0 == brightnessButton
-						.getActualState(AppSelectActivity.this)))) {
+				int x=brightnessButton.getActualState(AppSelectActivity.this);						
+				if ((1 == x) || (0 == x)) {
+					Log.d("lixuanbright1", "选择了1------------,,");
 					icon1 = statepic_light[0];
 					state = true;
-				} else if ((3 == brightnessButton
-						.getActualState(AppSelectActivity.this))) {
+				} else if ((3 == x)) {
+					Log.d("lixuanbright1", "选择了3------------,,");
 					state = true;
 					icon1 = statepic_light[1];
-
-				} else {
+				} else if(2==x) {
+					  Log.d("lixuanbright1", "选择了2------------,,");
 					icon1 = statepic[0];
 					state = true;
-				}
+				}/*else{
+					  Log.d("lixuanbright1", "选择了else------,,");//此处设置未else原因是...系统恢复出厂设置后,第一次起来.得到的System.bright值为102..因为与SystemUI和Lanuch
+					  //做法不同(用SharedPreferences),,,  所以默认第一次的值  为高亮的图标!!
+					icon1 = statepic_light[1];
+					state = true;
+				}*/
 				break;
 			case 2:
 				icon1 = statepic[2];

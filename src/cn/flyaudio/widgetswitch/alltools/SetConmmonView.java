@@ -71,12 +71,11 @@ public class SetConmmonView {
 	public void setCommonView(Context context, RemoteViews remoteViews,
 			int index, int icon1, int lable) {
 		
-		name = SkinResource.getSkinStringById(lable);
-	
-		
+		name = SkinResource.getSkinStringById(lable);	
 		remoteViews.setViewVisibility(shortcutIds[index], View.VISIBLE);
 		remoteViews.setViewVisibility(viewIds[index], View.GONE);
 		remoteViews.setImageViewResource(iconIds[index], icon1);
+		Log.d("lixuanbright", " 进入   setCommonView=  =  -------setImageViewResource:"+icon1+"         "+name);
 		remoteViews.setTextViewText(lableIds[index], name);
 
 		if (lable == AppSelectActivity.titless2[1]) {
@@ -135,8 +134,8 @@ public class SetConmmonView {
 				DrawableTools.getCurColorTheme());
 		BrightnessButton brightness = new BrightnessButton();
 		int x = brightness.getActualState(context);
-		
-		if (0 == x) {
+		Log.d("lixuanbright", " setCommonView2 =  = = =   ===:" +x);
+		if (0 == x||0==1) {
 			remoteViews.setImageViewResource(iconIds[index],
 					AppSelectActivity.statepic_light[0]);
 			remoteViews.setTextViewText(lableIds[index],
@@ -145,12 +144,14 @@ public class SetConmmonView {
 		} else if (2 == x) {
 			remoteViews.setImageViewResource(iconIds[index],
 					AppSelectActivity.statepic[0]);
+		
 			remoteViews.setTextViewText(lableIds[index],
 					SkinResource.getSkinStringByName("mid_bright_button"));
 			
 		} else if (3 == x) {
 			remoteViews.setImageViewResource(iconIds[index],
 					AppSelectActivity.statepic_light[1]);
+		
 			remoteViews.setTextViewText(lableIds[index],
 					SkinResource.getSkinStringByName("bright_on_button"));
 		}
