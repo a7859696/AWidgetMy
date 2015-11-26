@@ -34,7 +34,6 @@ import cn.flyaudio.widgetswitch.alltools.Constants;
 import cn.flyaudio.widgetswitch.alltools.DrawableTools;
 import cn.flyaudio.widgetswitch.alltools.Flog;
 import cn.flyaudio.widgetswitch.alltools.FlyShortcutXMLParser;
-import cn.flyaudio.widgetswitch.alltools.PicturesService;
 import cn.flyaudio.widgetswitch.alltools.SetConmmonView;
 import cn.flyaudio.widgetswitch.alltools.SkinResource;
 import cn.flyaudio.widgetswitch.db.AppWidgetDao;
@@ -51,6 +50,7 @@ public class SwitchWidget extends AppWidgetProvider {
 	public static Map<String, String> flyShortcutNeedShow = null;
 	private static Drawable whiteBg = null;
 	private static SetConmmonView set1;
+	private boolean isUpdate = true;
 
 	public static int[] shuzi = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	public static String[] broadcast = new String[] {
@@ -67,49 +67,75 @@ public class SwitchWidget extends AppWidgetProvider {
 	private Picturechange picturechange;
 
 	@Override
+	public void onReceive(Context context, Intent intent) {
+		// TODO Auto-generated method stub
+		super.onReceive(context, intent);
+		String action = intent.getAction();
+		Log.e("lixuanbright", "actionaction=====" + action);
+		if (action.equals(Intent.ACTION_LOCALE_CHANGED)) {
+			Log.d("lixuanbright", "onReceive====android.intent.action.LOCALE_CHANGED");
+		} else if (action.equals("android.appwidget.action.APPWIDGET_UPDATE")) {
+
+			Log.d("lixuanbright", "===APPWIDGET_UPDATE   =  =======");
+			RemoteViews remoteViews = null;
+			if (SwitchWidget.appWidgetManager == null) {
+				SwitchWidget.appWidgetManager = AppWidgetManager
+						.getInstance(context);
+			}
+
+			flyShortcutNeedShow = initFlyApp(); // 得到解析XML数据 data
+			Flog.d(TAG, "lyl-------onUpdate-------flyShortcutNeedShow="
+					+ flyShortcutNeedShow);
+
+			for (int appWidgetId : appWidgetIds) { // appWidgetIds
+				// Flog.d(TAG, "appWidgetId:" + appWidgetId);
+				Log.d("lixuanbright", "appWidgetId  循环次数   =  ==" + appWidgetId);
+				AppWidgetDao.saveAppWidgetId(context, appWidgetId); // 对appWidgetId存储
+				remoteViews = initRemoteViews(context, appWidgetId); // restore
+																		// shortcut
+																		// had
+																		// been
+																		// set
+
+				dataRestore(context, appWidgetId, remoteViews, false);
+				appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+			}
+
+			
+
+		}
+	}
+
+	private int[] appWidgetIds;
+
+	@Override
 	// 周期更新时调用
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
-		Log.d("lixuanbright", "onUpdate   =  ==");
-		RemoteViews remoteViews = null;
-		if (SwitchWidget.appWidgetManager == null) {
-			SwitchWidget.appWidgetManager = appWidgetManager;
-		}
-
-		flyShortcutNeedShow = initFlyApp(); // 得到解析XML数据 data
-		Flog.d(TAG, "lyl-------onUpdate-------flyShortcutNeedShow="
-				+ flyShortcutNeedShow);
+		Log.d("lixuanbright", "  onUpdate= == ==   ");
+		this.appWidgetIds = appWidgetIds;
 		
-		for (int appWidgetId : appWidgetIds) { // appWidgetIds
-			//Flog.d(TAG, "appWidgetId:" + appWidgetId);
-			Log.d("lixuanbright", "appWidgetId  循环次数   =  =="+appWidgetId);
-			AppWidgetDao.saveAppWidgetId(context, appWidgetId); // 对appWidgetId存储
-			remoteViews = initRemoteViews(context, appWidgetId); // restore
-																	// shortcut
-																	// had been
-																	// set
-			
-			dataRestore(context, appWidgetId, remoteViews, false);
-			appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-		}
 
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("com.android.systemui.updatebrightnessstate");
-		intentFilter.addAction("android.intent.action.AIRPLANE_MODE");
-		intentFilter
-				.addAction("com.android.flyaudio.powerwidget.mobiledatabutton");
-		intentFilter.addAction("android.net.wifi.WIFI_AP_STATE_CHANGED");
-		intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
-		 picturechange = new Picturechange();
-		context.getApplicationContext().registerReceiver(picturechange,
-				intentFilter);
 	}
 
 	@Override
 	public void onEnabled(Context context) {
 		// TODO Auto-generated method stub
-		super.onEnabled(context);
+		Log.d("lixuanbright", "  --------          -onEnabled    -  -----    ");
+		
 		context.startService(new Intent(context, AppWidgetService.class));
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter
+				.addAction("com.android.systemui.updatebrightnessstate");
+		intentFilter.addAction("android.intent.action.AIRPLANE_MODE");
+		intentFilter
+				.addAction("com.android.flyaudio.powerwidget.mobiledatabutton");
+		intentFilter.addAction("android.net.wifi.WIFI_AP_STATE_CHANGED");
+		intentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+		picturechange = new Picturechange();
+		context.getApplicationContext().registerReceiver(picturechange,
+				intentFilter);
+		super.onEnabled(context);
 	}
 
 	/**
@@ -127,11 +153,13 @@ public class SwitchWidget extends AppWidgetProvider {
 		// remoteViews = new RemoteViews(context.getPackageName(),
 		// R.layout.widget_layout); // 插件布局
 		Log.d("lixuanbright", "initRemoteViews   =  ==");
-		RemoteViews remoteViews = new RemoteViews(SkinResource.getSkinContext().getPackageName(),
+		RemoteViews remoteViews = new RemoteViews(SkinResource.getSkinContext()
+				.getPackageName(),
 				SkinResource.getSkinLayoutIdByName("widget_layout"));
-/*		if (flyShortcutNeedShow == null) {
-			flyShortcutNeedShow = initFlyApp();
-		}*/
+		/*
+		 * if (flyShortcutNeedShow == null) { flyShortcutNeedShow =
+		 * initFlyApp(); }
+		 */
 		for (int index = 0; index < Constants.viewIds.length; index++) { // 4个PendingInten，当点击插件4个图标，
 			Intent intent = new Intent(context, AppSelectActivity.class); // 启动AppSelectActivity
 			intent.putExtra(Constants.KEY_VIEW_ID, index); // viewId
@@ -159,7 +187,8 @@ public class SwitchWidget extends AppWidgetProvider {
 		 * remoteViews.setOnClickPendingIntent(Constants.titles[0], textIntent);
 		 */
 
-		Intent intent_edit = new Intent("cn.flyaudio.switchwidgetcut.edititem"); // 发送 点击编辑的Intent,,,,
+		Intent intent_edit = new Intent("cn.flyaudio.switchwidgetcut.edititem"); // 发送
+																					// 点击编辑的Intent,,,,
 		intent_edit.putExtra("titlesId", 1);
 		intent_edit.putExtra("isEdit", true);
 		intent_edit.putExtra(Constants.KEY_APPWIDGET_ID, appWidgetId);
@@ -170,9 +199,17 @@ public class SwitchWidget extends AppWidgetProvider {
 
 		// set background color theme
 
-		whiteBg = SkinResource.getSkinContext().getResources().getDrawable(SkinResource
+		whiteBg = SkinResource
+				.getSkinContext()
+				.getResources()
+				.getDrawable(
+						SkinResource
 								.getSkinDrawableIdByName("color_changed_background"));
-		Drawable drawable = SkinResource.getSkinContext().getResources().getDrawable(SkinResource
+		Drawable drawable = SkinResource
+				.getSkinContext()
+				.getResources()
+				.getDrawable(
+						SkinResource
 								.getSkinDrawableIdByName("widget_layout_bg"));
 
 		Bitmap bitmap = DrawableTools.drawableToBitmap(drawable);
@@ -193,7 +230,7 @@ public class SwitchWidget extends AppWidgetProvider {
 	public static void dataRestore(Context context, int appWidgetId,
 			RemoteViews view, boolean isEdit) {
 		Log.d("lixuanbright", "dataRestore    ==");
-		//Flog.d(TAG, "lyl-----------dataRestore:appWidgetId=" + appWidgetId);
+		// Flog.d(TAG, "lyl-----------dataRestore:appWidgetId=" + appWidgetId);
 		// data persistence:restore from database
 		set1 = new SetConmmonView();
 		AppWidgetDao dao = new AppWidgetDao(context);
@@ -214,15 +251,20 @@ public class SwitchWidget extends AppWidgetProvider {
 				for (int x : shuzi) {
 					// set click event //设置点击有程序图标的点击事件。。。。
 					if (name == (AppSelectActivity.titless2[x])) {
-						Log.d("lixuanbright", "dataRestore  -- =  =="+name+"         "+AppSelectActivity.titless2[x] +"        "+ x);
+						Log.d("lixuanbright", "dataRestore  -- =  ==" + name
+								+ "         " + AppSelectActivity.titless2[x]
+								+ "        " + x);
 						if (x != 8) {
 							Intent intent_d = new Intent(broadcast[x]);
 							intent_d.putExtra(Constants.KEY_VIEW_ID, i);
 							intent_d.putExtra(Constants.KEY_APPWIDGET_ID,
 									appWidgetId);
 
-							PendingIntent pendingIntent_d = PendingIntent.getBroadcast(context, appWidgetId* Constants.viewIds.length + i,
-											intent_d,PendingIntent.FLAG_UPDATE_CURRENT);
+							PendingIntent pendingIntent_d = PendingIntent
+									.getBroadcast(context, appWidgetId
+											* Constants.viewIds.length + i,
+											intent_d,
+											PendingIntent.FLAG_UPDATE_CURRENT);
 
 							view.setOnClickPendingIntent(
 									Constants.shortcutIds[i], pendingIntent_d);
@@ -235,35 +277,45 @@ public class SwitchWidget extends AppWidgetProvider {
 							intent.putExtra(Constants.KEY_APPWIDGET_ID,
 									appWidgetId);
 							intent.putExtra(Constants.KEY_FLYAPP, 120);
-							PendingIntent pendingIntent = PendingIntent.getService(context, (appWidgetId* viewIds.length + i) * 10, intent,
+							PendingIntent pendingIntent = PendingIntent
+									.getService(context, (appWidgetId
+											* viewIds.length + i) * 10, intent,
 											PendingIntent.FLAG_UPDATE_CURRENT);
 							view.setOnClickPendingIntent(shortcutIds[i],
 									pendingIntent);
 						}
 
-						
 						if (isEdit) // 是否可编辑
 						{
 							editModel(context, appWidgetId, view, i);
-						
+
 						} else {
-							Log.d("lixuanbright","editModel=======else");
+							Log.d("lixuanbright", "editModel=======else");
 							view.setViewVisibility(delectIds[i], View.GONE);
-							Drawable icon = SkinResource.getSkinContext().getResources().getDrawable(SkinResource
+							Drawable icon = SkinResource
+									.getSkinContext()
+									.getResources()
+									.getDrawable(
+											SkinResource
 													.getSkinDrawableIdByName("widget_edit"));
-							view.setImageViewBitmap(Constants.titles[1],DrawableTools.drawableToBitmap(icon));
+							view.setImageViewBitmap(Constants.titles[1],
+									DrawableTools.drawableToBitmap(icon));
 						}
 
-					} else {	
-						continue;			
+					} else {
+						continue;
 					}
 					if (name == (AppSelectActivity.titless2[0])) {
-						set1.setCommonView2(context, view, i, iconAll[i],pkgNames[i]);
+						Log.d("lixuanbright", "亮度               "+name);
+						set1.setCommonView2(context, view, i, iconAll[i],
+								pkgNames[i]);
 					} else {
-						set1.setCommonView(context, view, i, iconAll[i],pkgNames[i]);
+						Log.d("lixuanbright", "不是亮度       "+name);
+						set1.setCommonView(context, view, i, iconAll[i],
+								pkgNames[i]);
 					}
-				} 		// for循环结束
-				
+				} // for循环结束
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				Flog.d("lixuan", "55" + i);
@@ -272,12 +324,17 @@ public class SwitchWidget extends AppWidgetProvider {
 		} // 一个Constants.viewIds 的for结束
 
 		if (!flag) { // widget上面的编辑图标 titles【1】
-			Drawable icon = SkinResource.getSkinContext().getResources().getDrawable(
+			Drawable icon = SkinResource
+					.getSkinContext()
+					.getResources()
+					.getDrawable(
 							SkinResource.getSkinDrawableIdByName("widget_edit"));
-			view.setImageViewBitmap(Constants.titles[1],DrawableTools.drawableToBitmap(icon));
+			view.setImageViewBitmap(Constants.titles[1],
+					DrawableTools.drawableToBitmap(icon));
 		}
 		// update remoteViews
-		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+		AppWidgetManager appWidgetManager = AppWidgetManager
+				.getInstance(context);
 		appWidgetManager.updateAppWidget(appWidgetId, view);
 		dao.close();
 	}
@@ -300,14 +357,20 @@ public class SwitchWidget extends AppWidgetProvider {
 		 * R.drawable.widget_canceledit);
 		 */
 
-		Drawable icon = SkinResource.getSkinContext().getResources().getDrawable(SkinResource
+		Drawable icon = SkinResource
+				.getSkinContext()
+				.getResources()
+				.getDrawable(
+						SkinResource
 								.getSkinDrawableIdByName("widget_canceledit"));
-		view.setImageViewBitmap(Constants.titles[1],DrawableTools.drawableToBitmap(icon));
-		
+		view.setImageViewBitmap(Constants.titles[1],
+				DrawableTools.drawableToBitmap(icon));
+
 		Flog.d(TAG, "editModel----------:appWidgetId=" + appWidgetId);
 
 		for (int index = 0; index < Constants.viewIds.length; index++) {
-			Intent intent_edit = new Intent("cn.flyaudio.switchwidgetcut.edititem");
+			Intent intent_edit = new Intent(
+					"cn.flyaudio.switchwidgetcut.edititem");
 
 			intent_edit.putExtra("titlesId", 1);
 			intent_edit.putExtra("isEdit", false);
@@ -339,9 +402,10 @@ public class SwitchWidget extends AppWidgetProvider {
 	@Override
 	public void onDisabled(Context context) {
 		// TODO Auto-generated method stub
+		Log.d("lixuanbright", "onDisabled:");
 		super.onDisabled(context);
 		context.stopService(new Intent(context, AppWidgetService.class));
-	
+
 	}
 
 	@Override
@@ -369,7 +433,8 @@ public class SwitchWidget extends AppWidgetProvider {
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			// wifi 状态改变的广播，使图片改变
-			if (intent.getAction().equals("android.net.wifi.WIFI_STATE_CHANGED")) {
+			if (intent.getAction()
+					.equals("android.net.wifi.WIFI_STATE_CHANGED")) {
 				// Flog.d("lixuanwifi", "Action=" + intent.getAction());
 				AppWidgetDao dao = new AppWidgetDao(context);
 				List<Picture> three = dao.queryPkgName();
@@ -383,24 +448,30 @@ public class SwitchWidget extends AppWidgetProvider {
 					int appWidgetId = threes.getAppWidgetId();
 
 					if (name == AppSelectActivity.titless2[5]) {
-						RemoteViews remoteViews = SwitchWidget.initRemoteViews(
-								context, appWidgetId);
-
-						int x = wifiButton.getActualStatemy(context);					
+						RemoteViews remoteViews = new RemoteViews(SkinResource.getSkinContext()
+								.getPackageName(),
+								SkinResource.getSkinLayoutIdByName("widget_layout"));
+						int x = wifiButton.getActualStatemy(context);
 						if ((2 == x) || (4 == x) || (6 == x)) {
-							remoteViews.setInt(iconIds[index],"setBackgroundColor", Color.WHITE);
+							remoteViews.setInt(iconIds[index],
+									"setBackgroundColor", Color.WHITE);
 						} else {
-							remoteViews.setInt(iconIds[index],"setBackgroundColor",DrawableTools.getCurColorTheme());
+							remoteViews.setInt(iconIds[index],
+									"setBackgroundColor",
+									DrawableTools.getCurColorTheme());
 						}
 
 						setCommonView1(remoteViews, index, 5);
-						AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-						appWidgetManager.updateAppWidget(appWidgetId,remoteViews);
+						AppWidgetManager appWidgetManager = AppWidgetManager
+								.getInstance(context);
+						appWidgetManager.updateAppWidget(appWidgetId,
+								remoteViews);
 					}
 				}
 			}
-			//改变  AP图片的广播
-			if (intent.getAction().equals("android.net.wifi.WIFI_AP_STATE_CHANGED")) {
+			// 改变 AP图片的广播
+			if (intent.getAction().equals(
+					"android.net.wifi.WIFI_AP_STATE_CHANGED")) {
 				// Flog.d("lixuanwifiAP", "Action=" + intent.getAction());
 				AppWidgetDao dao = new AppWidgetDao(context);
 				List<Picture> three = dao.queryPkgName();
@@ -414,24 +485,32 @@ public class SwitchWidget extends AppWidgetProvider {
 					int appWidgetId = threes.getAppWidgetId();
 
 					if (name == AppSelectActivity.titless2[1]) {
-						RemoteViews remoteViews = SwitchWidget.initRemoteViews(context, appWidgetId);
-						
-						int x = wifiapButton.getActualStatemy(context);						
+						RemoteViews remoteViews = new RemoteViews(SkinResource.getSkinContext()
+								.getPackageName(),
+								SkinResource.getSkinLayoutIdByName("widget_layout"));
+						int x = wifiapButton.getActualStatemy(context);
 						if ((2 == x) || (4 == x) || (6 == x)) {
-							remoteViews.setInt(iconIds[index],"setBackgroundColor", Color.WHITE);
+							remoteViews.setInt(iconIds[index],
+									"setBackgroundColor", Color.WHITE);
 						} else {
-							remoteViews.setInt(iconIds[index],"setBackgroundColor",DrawableTools.getCurColorTheme());
+							remoteViews.setInt(iconIds[index],
+									"setBackgroundColor",
+									DrawableTools.getCurColorTheme());
 						}
 						setCommonView1(remoteViews, index, 1);
-						AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-						appWidgetManager.updateAppWidget(appWidgetId,remoteViews);
+						AppWidgetManager appWidgetManager = AppWidgetManager
+								.getInstance(context);
+						appWidgetManager.updateAppWidget(appWidgetId,
+								remoteViews);
 					}
 				}
 			}
-			//改变数据流量的广播
-			if (intent.getAction().equals("com.android.flyaudio.powerwidget.mobiledatabutton")) {
+			// 改变数据流量的广播
+			if (intent.getAction().equals(
+					"com.android.flyaudio.powerwidget.mobiledatabutton")) {
 				// Flog.d("lixuandata", "Action=" + intent.getAction());
-				Log.d("lixuandata","Action=====WifiChange" + intent.getAction());
+				Log.d("lixuandata",
+						"Action=====WifiChange" + intent.getAction());
 				AppWidgetDao dao = new AppWidgetDao(context);
 				List<Picture> three = dao.queryPkgName();
 				Iterator<Picture> it = three.iterator();
@@ -442,23 +521,30 @@ public class SwitchWidget extends AppWidgetProvider {
 					int index = threes.getIndexViewId();
 					int appWidgetId = threes.getAppWidgetId();
 					if (name == AppSelectActivity.titless2[4]) {
-						RemoteViews remoteViews = SwitchWidget.initRemoteViews(context, appWidgetId);
-						datastate = wifidata.getActualStatemy(context);						
+						RemoteViews remoteViews = new RemoteViews(SkinResource.getSkinContext()
+								.getPackageName(),
+								SkinResource.getSkinLayoutIdByName("widget_layout"));
+						datastate = wifidata.getActualStatemy(context);
 						if (!datastate) {
-							remoteViews.setInt(iconIds[index],"setBackgroundColor", Color.WHITE);
-						} 
-						else {
-							remoteViews.setInt(iconIds[index],"setBackgroundColor",DrawableTools.getCurColorTheme());
+							remoteViews.setInt(iconIds[index],
+									"setBackgroundColor", Color.WHITE);
+						} else {
+							remoteViews.setInt(iconIds[index],
+									"setBackgroundColor",
+									DrawableTools.getCurColorTheme());
 						}
-						
+
 						setCommonView1(remoteViews, index, 4);
-						AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-						appWidgetManager.updateAppWidget(appWidgetId,remoteViews);
+						AppWidgetManager appWidgetManager = AppWidgetManager
+								.getInstance(context);
+						appWidgetManager.updateAppWidget(appWidgetId,
+								remoteViews);
 					}
 				}
 			}
-			//改变飞行模式的图片广播
-			if (intent.getAction().equals("android.intent.action.AIRPLANE_MODE")) {
+			// 改变飞行模式的图片广播
+			if (intent.getAction()
+					.equals("android.intent.action.AIRPLANE_MODE")) {
 				// Flog.d("lixuanflystate", "Action=" + intent.getAction());
 				AppWidgetDao dao = new AppWidgetDao(context);
 				List<Picture> three = dao.queryPkgName();
@@ -466,7 +552,7 @@ public class SwitchWidget extends AppWidgetProvider {
 				Iterator<Picture> it = three.iterator();
 
 				while (it.hasNext()) {
-					
+
 					Picture threes = (Picture) it.next();
 					int name = threes.getPkgNames();
 					int index = threes.getIndexViewId();
@@ -474,25 +560,33 @@ public class SwitchWidget extends AppWidgetProvider {
 
 					if (name == AppSelectActivity.titless2[6]) {
 
-						RemoteViews remoteViews = SwitchWidget.initRemoteViews(context, appWidgetId);
+						RemoteViews remoteViews = new RemoteViews(SkinResource.getSkinContext()
+								.getPackageName(),
+								SkinResource.getSkinLayoutIdByName("widget_layout"));
 						Boolean flystate = flymode.getActualState(context);
 
 						if (!flystate) {
-							remoteViews.setInt(iconIds[index],"setBackgroundColor", Color.WHITE);
+							remoteViews.setInt(iconIds[index],
+									"setBackgroundColor", Color.WHITE);
 						} else {
 							// Flog.d("lixuanflystate", "设置图片的背景色 系统色" +
 							// flystate);
-							remoteViews.setInt(iconIds[index],"setBackgroundColor",DrawableTools.getCurColorTheme());
+							remoteViews.setInt(iconIds[index],
+									"setBackgroundColor",
+									DrawableTools.getCurColorTheme());
 						}
-						
+
 						setCommonView1(remoteViews, index, 6);
-						AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-						appWidgetManager.updateAppWidget(appWidgetId,remoteViews);
+						AppWidgetManager appWidgetManager = AppWidgetManager
+								.getInstance(context);
+						appWidgetManager.updateAppWidget(appWidgetId,
+								remoteViews);
 					}
 				}
 			}
-			//接收改变    亮度图片的广播
-			if (intent.getAction().equals("com.android.systemui.updatebrightnessstate")) {
+			// 接收改变 亮度图片的广播
+			if (intent.getAction().equals(
+					"com.android.systemui.updatebrightnessstate")) {
 				Log.d("lixuanbright", "intend=" + intent.getAction());
 				brightness = new BrightnessButton();
 				brightness.changeCurrentBrightness(context, intent);
@@ -510,31 +604,47 @@ public class SwitchWidget extends AppWidgetProvider {
 					int appWidgetId = threes.getAppWidgetId();
 
 					if (name == AppSelectActivity.titless2[0]) {
-						RemoteViews remoteViews = SwitchWidget.initRemoteViews(
-								context, appWidgetId);
+						RemoteViews remoteViews = new RemoteViews(SkinResource.getSkinContext()
+								.getPackageName(),
+								SkinResource.getSkinLayoutIdByName("widget_layout"));
 						if (0 == x || 1 == x) {
 							remoteViews.setImageViewResource(iconIds[index],
 									AppSelectActivity.statepic_light[0]);
 							Log.d("lixuanbright", "进入x====" + x);
-							remoteViews.setTextViewText(lableIds[index],SkinResource.getSkinStringById(AppSelectActivity.titless_bright[0])); //
-						}
-						else if (2 == x) {
+							remoteViews
+									.setTextViewText(
+											lableIds[index],
+											SkinResource
+													.getSkinStringById(AppSelectActivity.titless_bright[0])); //
+						} else if (2 == x) {
 							// Flog.d("lixuanbright", "x====2");
-							remoteViews.setImageViewResource(iconIds[index],AppSelectActivity.statepic[0]);
-							remoteViews.setTextViewText(lableIds[index],SkinResource.getSkinStringById(AppSelectActivity.titless_bright[1]));
-						} 
-						else if (3 == x) {
-							remoteViews.setImageViewResource(iconIds[index],AppSelectActivity.statepic_light[1]);
-							remoteViews.setTextViewText(lableIds[index],SkinResource.getSkinStringById(AppSelectActivity.titless_bright[2]));
+							remoteViews.setImageViewResource(iconIds[index],
+									AppSelectActivity.statepic[0]);
+							remoteViews
+									.setTextViewText(
+											lableIds[index],
+											SkinResource
+													.getSkinStringById(AppSelectActivity.titless_bright[1]));
+						} else if (3 == x) {
+							remoteViews.setImageViewResource(iconIds[index],
+									AppSelectActivity.statepic_light[1]);
+							remoteViews
+									.setTextViewText(
+											lableIds[index],
+											SkinResource
+													.getSkinStringById(AppSelectActivity.titless_bright[2]));
 						}
-						AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-						appWidgetManager.updateAppWidget(appWidgetId,remoteViews);
+						AppWidgetManager appWidgetManager = AppWidgetManager
+								.getInstance(context);
+						appWidgetManager.updateAppWidget(appWidgetId,
+								remoteViews);
 
 					}
 				}
 			}
-                      //接收改变  的Share  值
-			if (intent.getAction().equals("cn.flyaudio.systemui.changebrightness")) {
+			// 接收改变 的Share 值
+			if (intent.getAction().equals(
+					"cn.flyaudio.systemui.changebrightness")) {
 				Log.d("lixuanbright", "intend=" + intent.getAction());
 				brightness = new BrightnessButton();
 				brightness.changeCurrentBrightness(context, intent);

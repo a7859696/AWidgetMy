@@ -21,6 +21,7 @@ import android.widget.RemoteViews;
 import cn.flyaudio.widgetswitch.alltools.Constants;
 import cn.flyaudio.widgetswitch.alltools.DrawableTools;
 import cn.flyaudio.widgetswitch.alltools.Flog;
+import cn.flyaudio.widgetswitch.alltools.SkinResource;
 import cn.flyaudio.widgetswitch.db.AppWidgetDao;
 import cn.flyaudio.widgetswitch.state.FlyModel;
 import cn.flyaudio.widgetswitch.state.MobileDataButton;
@@ -108,11 +109,5 @@ public class DelectItemReceiver extends BroadcastReceiver {
 	private void setCommonView(RemoteViews remoteViews, int indexViewId) {
 		remoteViews.setViewVisibility(shortcutIds[indexViewId], View.GONE);
 		remoteViews.setViewVisibility(viewIds[indexViewId], View.VISIBLE);
-	}
-
-	private void setCommonView1(RemoteViews remoteViews, int indexViewId, int x) {
-
-		remoteViews.setImageViewResource(iconIds[indexViewId],
-				AppSelectActivity.statepic[x]);
 	}
 }

@@ -116,7 +116,7 @@ public class BrightnessButton extends ButtonPower {
 		SharedPreferences state = context.getSharedPreferences("brightness_state", 0);
 		mCurrentBrightness = state.getInt("currentstate", 3);
 
-		Log.d("lixuanbright", " mCurrentBrightness =  = = =    返回值:"
+		Log.d("lixuanbright", " mCurrentBrightness =  = = = 当前亮度值:"
 				+ mCurrentBrightness);
 		return mCurrentBrightness;
 	}

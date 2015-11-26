@@ -5,6 +5,8 @@ import static cn.flyaudio.widgetswitch.alltools.Constants.lableIds;
 import static cn.flyaudio.widgetswitch.alltools.Constants.shortcutIds;
 import static cn.flyaudio.widgetswitch.alltools.Constants.viewIds;
 
+import java.io.InputStream;
+
 import cn.flyaudio.widgetswitch.state.BrightnessButton;
 import cn.flyaudio.widgetswitch.state.FlyModel;
 import cn.flyaudio.widgetswitch.state.MobileDataButton;
@@ -12,6 +14,8 @@ import cn.flyaudio.widgetswitch.state.WifiApButton;
 import cn.flyaudio.widgetswitch.state.WifiButton;
 import cn.flyaudio.widgetswitch.view.AppSelectActivity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -130,31 +134,32 @@ public class SetConmmonView {
 		// Log.d("lixuanupdate", "getString(lable)==" +
 		// context.getString(lable));
 
-		remoteViews.setInt(iconIds[index], "setBackgroundColor",
-				DrawableTools.getCurColorTheme());
+	
 		BrightnessButton brightness = new BrightnessButton();
 		int x = brightness.getActualState(context);
-		Log.d("lixuanbright", " setCommonView2 =  = = =   ===:" +x);
-		if (0 == x||0==1) {
+		Log.d("lixuanbright", " 进入 -  - - setCommonView2 =  = = =   ===:" +x);
+		if (0 == x||1==x) {
+			Log.d("lixuanbright", " 在  0或者1  亮度 =  = = =   ===:" );
 			remoteViews.setImageViewResource(iconIds[index],
 					AppSelectActivity.statepic_light[0]);
 			remoteViews.setTextViewText(lableIds[index],
 					SkinResource.getSkinStringByName("night_bright_button"));
-
 		} else if (2 == x) {
+			Log.d("lixuanbright", " 在  0或者1  亮度 =  = = =   ===:" );
 			remoteViews.setImageViewResource(iconIds[index],
 					AppSelectActivity.statepic[0]);
-		
 			remoteViews.setTextViewText(lableIds[index],
 					SkinResource.getSkinStringByName("mid_bright_button"));
 			
 		} else if (3 == x) {
+			Log.d("lixuanbright", "在     3  亮度 =  = = =   ===:" );
 			remoteViews.setImageViewResource(iconIds[index],
-					AppSelectActivity.statepic_light[1]);
-		
+					AppSelectActivity.statepic_light[1]);	
 			remoteViews.setTextViewText(lableIds[index],
 					SkinResource.getSkinStringByName("bright_on_button"));
 		}
+		remoteViews.setInt(iconIds[index], "setBackgroundColor",
+				DrawableTools.getCurColorTheme());
 	}
 
 }

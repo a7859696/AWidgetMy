@@ -12,7 +12,6 @@ import java.util.TimerTask;
 
 import cn.flyaudio.widgetswitch.alltools.DrawableTools;
 import cn.flyaudio.widgetswitch.alltools.Flog;
-import cn.flyaudio.widgetswitch.alltools.PicturesService;
 import cn.flyaudio.widgetswitch.alltools.SetConmmonView;
 import cn.flyaudio.widgetswitch.alltools.SkinResource;
 import cn.flyaudio.widgetswitch.db.AppWidgetDao;
